@@ -1,12 +1,12 @@
-# Blog Fullstac kWebsite (Node.js, React) :fire:
+# Blog Fullstack Website (Node.js, React) :fire:
 
 ### Backend
 
-Backend was made using __Node.js__ and __Express__ framework.
+Backend was made using ___Node.js___ and ___Express___ framework.
 
 ### Frontend
 
-Frontend was made using __React__ and __Redux__ library.
+Frontend was made using ___React___ and ___Redux___ library.
 
 ### Website features
 
