@@ -25,8 +25,8 @@ export const Home = (params) => {
   React.useEffect(() => {
     dispatch(fetchPosts(tag));
     dispatch(fetchPopPosts(tag));
-    dispatch(fetchTags());
-    dispatch(fetchComments(true));
+    // dispatch(fetchTags());
+    // dispatch(fetchComments(true));
   }, [tag]);
 
   const handleChange = (event, newValue) => {

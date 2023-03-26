@@ -9,6 +9,7 @@ import React from 'react';
 import { fetchAuth, selectIsAuth } from './redux/slices/auth';
 import { createTheme } from '@mui/material/styles';
 import { MessagePopup } from './components/MessagePopup';
+import { fetchPosts, fetchTags, fetchPopPosts, fetchComments } from './redux/slices/post';
 
 function App() {
   const dispatch = useDispatch();
@@ -16,6 +17,8 @@ function App() {
 
   React.useEffect(() => {
     dispatch(fetchAuth());
+    dispatch(fetchTags());
+    dispatch(fetchComments(true));
   }, []);
 
   const theme = createTheme({

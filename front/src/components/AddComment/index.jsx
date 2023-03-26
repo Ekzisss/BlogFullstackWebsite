@@ -34,8 +34,8 @@ export const Index = (params) => {
         <Avatar
           classes={{ root: styles.avatar }}
           src={
-            (userData.avatarUrl &&
-              `${process.env.REACT_APP_API_URL || 'http://localhost:80'}${userData.avatarUrl}`) ||
+            (userData?.avatarUrl &&
+              `${process.env.REACT_APP_API_URL || 'http://localhost:80'}${userData?.avatarUrl}`) ||
             '/noavatar.png'
           }
         />

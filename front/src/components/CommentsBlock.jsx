@@ -48,7 +48,7 @@ export const CommentsBlock = ({ items, children, isLoading = true }) => {
                 </div>
               ) : (
                 <ListItemText
-                  style={{ 'word-wrap': 'break-word' }}
+                  style={{ wordWrap: 'break-word' }}
                   primary={obj.user.fullName}
                   secondary={obj.text}
                 />
