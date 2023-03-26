@@ -23,3 +23,5 @@ export const postUpdateValidation = [
   body('tags').optional().isArray(),
   body('imageUrl').optional().isString(),
 ];
+
+export const CommentValidation = [body('text').isLength({ min: 5, max: 120 }).isString()];

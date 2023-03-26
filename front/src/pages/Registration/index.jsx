@@ -11,10 +11,13 @@ import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { fetchRegister } from '../../redux/slices/auth';
 import { useNavigate } from 'react-router-dom';
+import axios from '../../axios';
 
 export const Registration = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const inputFileRef = React.useRef(null);
+  const [imageUrl, setImageUrl] = React.useState('');
 
   const {
     register,
@@ -31,6 +34,7 @@ export const Registration = () => {
   });
 
   const onSubmit = async (values) => {
+    console.log({ ...values, imageUrl });
     const data = await dispatch(fetchRegister(values));
 
     if (!data.payload) {
@@ -40,8 +44,25 @@ export const Registration = () => {
     navigate('/login');
   };
 
+  const handleChangeFile = async (event) => {
+    try {
+      console.log(event.target.files[0]);
+      const formData = new FormData();
+      const file = event.target.files[0];
+      formData.append('image', file);
+      const { data } = await axios.post('/upload', formData);
+      setImageUrl(data.url);
+    } catch (error) {
+      console.warn(error);
+      alert('Ощибка при загрузке файла');
+    }
+  };
+
   return (
-    <Paper classes={{ root: styles.root }}>
+    <Paper
+      elevation={0}
+      classes={{ root: styles.root }}
+    >
       <Typography
         classes={{ root: styles.title }}
         variant="h5"
@@ -49,7 +70,21 @@ export const Registration = () => {
         Создание аккаунта
       </Typography>
       <div className={styles.avatar}>
-        <Avatar sx={{ width: 100, height: 100 }} />
+        <Avatar
+          style={{ cursor: 'pointer' }}
+          onClick={() => inputFileRef.current.click()}
+          src={
+            (imageUrl && `${process.env.REACT_APP_API_URL || 'http://localhost:80'}${imageUrl}`) ||
+            '/noavatar.png'
+          }
+          sx={{ width: 100, height: 100 }}
+        />
+        <input
+          ref={inputFileRef}
+          type="file"
+          onChange={handleChangeFile}
+          hidden
+        />
       </div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <TextField

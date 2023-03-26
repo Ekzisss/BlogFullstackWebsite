@@ -8,26 +8,39 @@ import { TagsBlock } from '../components/TagsBlock';
 import { CommentsBlock } from '../components/CommentsBlock';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchPosts, fetchTags } from '../redux/slices/post';
+import { useParams } from 'react-router-dom';
+import { fetchPosts, fetchTags, fetchPopPosts, fetchComments } from '../redux/slices/post';
 
-export const Home = () => {
+export const Home = (params) => {
+  const { tag } = useParams();
+
+  const [isPopPosts, setIsPopPosts] = React.useState(0);
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.auth.data);
-  const { posts, tags } = useSelector((state) => state.posts);
+  const { posts, tags, postsPop, comments } = useSelector((state) => state.posts);
 
   const isPostsLoading = posts.status === 'loading';
   const isTagsLoading = tags.status === 'loading';
 
   React.useEffect(() => {
-    dispatch(fetchPosts());
+    dispatch(fetchPosts(tag));
+    dispatch(fetchPopPosts(tag));
     dispatch(fetchTags());
-  }, []);
+    dispatch(fetchComments(true));
+  }, [tag]);
+
+  const handleChange = (event, newValue) => {
+    setIsPopPosts(newValue);
+  };
+
+  console.log(posts);
 
   return (
-    <>
+    <div key={tag}>
       <Tabs
         style={{ marginBottom: 15 }}
-        value={0}
+        value={isPopPosts}
+        onChange={handleChange}
         aria-label="basic tabs example"
       >
         <Tab label="Новые" />
@@ -40,6 +53,7 @@ export const Home = () => {
         <Grid
           xs={8}
           item
+          hidden={isPopPosts}
         >
           {(isPostsLoading ? [...Array(5)] : posts.items).map((obj, index) =>
             isPostsLoading ? (
@@ -49,13 +63,46 @@ export const Home = () => {
               />
             ) : (
               <Post
+                key={index}
                 id={obj._id}
                 title={obj.title}
-                imageUrl={obj.imageUrl && `http://localhost:4444${obj.imageUrl}`}
+                imageUrl={
+                  obj.imageUrl && `${process.env.REACT_APP_API_URL || 'http://localhost:80'}${obj.imageUrl}`
+                }
                 user={obj.user}
                 createdAt={obj.createdAt}
                 viewsCount={obj.viewsCount}
-                commentsCount={3}
+                commentsCount={obj.commentsCount}
+                tags={obj.tags}
+                isEditable={userData?._id === obj.user._id}
+              />
+            )
+          )}
+        </Grid>
+
+        <Grid
+          xs={8}
+          item
+          hidden={!isPopPosts}
+        >
+          {(isPostsLoading ? [...Array(5)] : postsPop.items).map((obj, index) =>
+            isPostsLoading ? (
+              <Post
+                key={index}
+                isLoading={true}
+              />
+            ) : (
+              <Post
+                key={index}
+                id={obj._id}
+                title={obj.title}
+                imageUrl={
+                  obj.imageUrl && `${process.env.REACT_APP_API_URL || 'http://localhost:80'}${obj.imageUrl}`
+                }
+                user={obj.user}
+                createdAt={obj.createdAt}
+                viewsCount={obj.viewsCount}
+                commentsCount={obj.commentsCount}
                 tags={obj.tags}
                 isEditable={userData?._id === obj.user._id}
               />
@@ -72,26 +119,11 @@ export const Home = () => {
           />
 
           <CommentsBlock
-            items={[
-              {
-                user: {
-                  fullName: 'Вася Пупкин',
-                  avatarUrl: 'https://mui.com/static/images/avatar/1.jpg',
-                },
-                text: 'Это тестовый комментарий',
-              },
-              {
-                user: {
-                  fullName: 'Иван Иванов',
-                  avatarUrl: 'https://mui.com/static/images/avatar/2.jpg',
-                },
-                text: 'When displaying three lines or more, the avatar is not aligned at the top. You should set the prop to align the avatar at the top',
-              },
-            ]}
+            items={comments.items}
             isLoading={false}
           />
         </Grid>
       </Grid>
-    </>
+    </div>
   );
 };

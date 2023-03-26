@@ -2,7 +2,7 @@ import PostModel from '../Models/Post.js';
 
 export const getLastTegs = async (req, res) => {
   try {
-    const posts = await PostModel.find().limit(5).exec();
+    const posts = await PostModel.find().sort('-createdAt').limit(5).exec();
 
     const tags = posts.map((obj) => obj.tags).flat();
     const tagsUniqe = [...new Set(Array.from(tags))].slice(0, 5);
@@ -18,7 +18,25 @@ export const getLastTegs = async (req, res) => {
 
 export const getAll = async (req, res) => {
   try {
-    const posts = await PostModel.find().populate('user').exec();
+    const posts = !(Object.keys(req.params).length === 0)
+      ? await PostModel.find({ tags: req.params.tag }).sort('-createdAt').populate('user').exec()
+      : await PostModel.find().sort('-createdAt').populate('user').exec();
+
+    res.json(posts);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: 'Не удалось получить список постов',
+    });
+  }
+};
+
+export const getAllPop = async (req, res) => {
+  try {
+    const posts = !(Object.keys(req.params).length === 0)
+      ? await PostModel.find({ tags: req.params.tag }).sort('-viewsCount').populate('user')
+      : await PostModel.find().sort('-viewsCount').populate('user');
+
     res.json(posts);
   } catch (error) {
     console.log(error);

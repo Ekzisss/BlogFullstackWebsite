@@ -39,6 +39,8 @@ export const Post = ({
     }
   };
 
+  console.log(commentsCount);
+
   return (
     <div className={clsx(styles.root, { [styles.rootFull]: isFullPost })}>
       {isEditable && (

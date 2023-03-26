@@ -7,6 +7,7 @@ import { Route, Routes } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import React from 'react';
 import { fetchAuth, selectIsAuth } from './redux/slices/auth';
+import { createTheme } from '@mui/material/styles';
 import { MessagePopup } from './components/MessagePopup';
 
 function App() {
@@ -17,6 +18,14 @@ function App() {
     dispatch(fetchAuth());
   }, []);
 
+  const theme = createTheme({
+    shadows: {
+      24: '0px 11px 15px -7px red,0px 24px 38px 3px red,0px 9px 46px 8px red',
+    },
+  });
+
+  theme.shadows[24] = theme.shadows[0];
+
   return (
     <>
       {/* <MessagePopup /> */}
@@ -26,6 +35,10 @@ function App() {
           <Route
             path="/"
             element={<Home />}
+          ></Route>
+          <Route
+            path="/tag/:tag"
+            element={<Home tags={true} />}
           ></Route>
           <Route
             path="/login"

@@ -1,8 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from '../../axios';
 
-export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
-  const { data } = await axios.get('/posts');
+export const fetchPosts = createAsyncThunk('posts/fetchPosts', async (tag) => {
+  const { data } = tag ? await axios.get(`/posts/tag/${tag}`) : await axios.get('/posts');
+  return data;
+});
+
+export const fetchPopPosts = createAsyncThunk('posts/fetchPopPosts', async (tag) => {
+  const { data } = tag ? await axios.get(`/posts-pop/${tag}`) : await axios.get('/posts-pop');
   return data;
 });
 
@@ -15,12 +20,25 @@ export const fetchRemovePost = createAsyncThunk('posts/fetchRemovePost', async (
   axios.delete(`/posts/${id}`)
 );
 
+export const fetchComments = createAsyncThunk('posts/fetchComments', async (latest) => {
+  const { data } = latest ? await axios.get('comments/latest') : await axios.get('comments');
+  return data;
+});
+
 const initialState = {
   posts: {
     items: [],
     status: 'loading',
   },
+  postsPop: {
+    items: [],
+    status: 'loading',
+  },
   tags: {
+    items: [],
+    status: 'loading',
+  },
+  comments: {
     items: [],
     status: 'loading',
   },
@@ -32,7 +50,7 @@ const postsSlice = createSlice({
   reducers: {},
   extraReducers: {
     //get posts
-    [fetchPosts.panding]: (state) => {
+    [fetchPosts.pending]: (state) => {
       state.posts.items = [];
       state.posts.status = 'loading';
     },
@@ -46,7 +64,7 @@ const postsSlice = createSlice({
     },
 
     //get tags
-    [fetchTags.panding]: (state) => {
+    [fetchTags.pending]: (state) => {
       state.tags.items = [];
       state.tags.status = 'loading';
     },
@@ -59,8 +77,36 @@ const postsSlice = createSlice({
       state.tags.status = 'error';
     },
 
+    //get popPosts
+    [fetchPopPosts.pending]: (state) => {
+      state.postsPop.items = [];
+      state.postsPop.status = 'loading';
+    },
+    [fetchPopPosts.fulfilled]: (state, action) => {
+      state.postsPop.items = action.payload;
+      state.postsPop.status = 'loaded';
+    },
+    [fetchPopPosts.rejected]: (state) => {
+      state.postsPop.items = [];
+      state.postsPop.status = 'error';
+    },
+
+    //get comments
+    [fetchComments.pending]: (state) => {
+      state.comments.items = [];
+      state.comments.status = 'loading';
+    },
+    [fetchComments.fulfilled]: (state, action) => {
+      state.comments.items = action.payload;
+      state.comments.status = 'loaded';
+    },
+    [fetchComments.rejected]: (state) => {
+      state.comments.items = [];
+      state.comments.status = 'error';
+    },
+
     //remove post
-    [fetchRemovePost.panding]: (state, action) => {
+    [fetchRemovePost.pending]: (state, action) => {
       state.posts.items = state.posts.items.filter((obj) => obj._id !== action.meta.arg);
     },
   },

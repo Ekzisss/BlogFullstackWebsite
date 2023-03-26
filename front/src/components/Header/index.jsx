@@ -43,7 +43,7 @@ export const Header = () => {
             className={styles.logo}
             to="/"
           >
-            <div>ARCHAKOV BLOG</div>
+            <div>Ekzis Blog</div>
           </Link>
           <div className={styles.buttons}>
             {isAuth ? (

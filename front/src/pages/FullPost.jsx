@@ -7,70 +7,78 @@ import ReactMarkdown from 'react-markdown';
 
 import { useParams } from 'react-router-dom';
 import axios from '../axios';
+import { useSelector } from 'react-redux';
 
 export const FullPost = () => {
   const [data, setData] = React.useState();
-  const [isLoading, setLoading] = React.useState(true);
+  const [comments, setCommnets] = React.useState();
+  const [isPostLoading, setPostLoading] = React.useState(true);
+  const [isCommentsLoading, setCommentsLoading] = React.useState(true);
+  const [updater, setUpdater] = React.useState(0);
   const { id } = useParams();
+
+  console.log('top ' + updater);
 
   React.useEffect(() => {
     axios
       .get(`/posts/${id}`)
       .then((res) => {
         setData(res.data);
-        setLoading(false);
+        setPostLoading(false);
       })
       .catch((err) => {
         console.warn(err);
         alert('Ошибка при получении статьи');
       });
-  }, []);
 
-  if (isLoading) {
+    axios
+      .get(`/comments/${id}`)
+      .then((res) => {
+        setCommnets(res.data);
+        setCommentsLoading(false);
+      })
+      .catch((err) => {
+        console.warn(err);
+        alert('Ошибка при получении коментариев');
+      });
+  }, [updater]);
+
+  if (isPostLoading) {
     return (
       <Post
-        isLoading={isLoading}
+        isLoading={isPostLoading}
         isFullPost
       />
     );
   }
 
   return (
-    <>
+    <div key={updater}>
       <Post
         id={data._id}
         title={data.title}
-        imageUrl={data.imageUrl && `http://localhost:4444${data.imageUrl}`}
+        imageUrl={
+          data.imageUrl && `${process.env.REACT_APP_API_URL || 'http://localhost:80'}${data.imageUrl}`
+        }
         user={data.user}
         createdAt={data.createdAt}
         viewsCount={data.viewsCount}
-        commentsCount={3}
+        commentsCount={data.commentsCount}
         tags={data.tags}
         isFullPost
       >
         <ReactMarkdown children={data.text} />
       </Post>
       <CommentsBlock
-        items={[
-          {
-            user: {
-              fullName: 'Вася Пупкин',
-              avatarUrl: 'https://mui.com/static/images/avatar/1.jpg',
-            },
-            text: 'Это тестовый комментарий 555555',
-          },
-          {
-            user: {
-              fullName: 'Иван Иванов',
-              avatarUrl: 'https://mui.com/static/images/avatar/2.jpg',
-            },
-            text: 'When displaying three lines or more, the avatar is not aligned at the top. You should set the prop to align the avatar at the top',
-          },
-        ]}
-        isLoading={false}
+        items={comments}
+        isLoading={isCommentsLoading}
       >
-        <Index />
+        <Index
+          setUpdater={setUpdater}
+          updater={updater}
+          id={data._id}
+        />
       </CommentsBlock>
-    </>
+    </div>
   );
 };
