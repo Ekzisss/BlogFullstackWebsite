@@ -7,12 +7,15 @@ import SimpleMDE from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
 import styles from './AddPost.module.scss';
 
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { selectIsAuth } from '../../redux/slices/auth';
 import { useNavigate, Navigate, useParams } from 'react-router-dom';
 import axios from '../../axios';
 
+import { addMessage } from '../../redux/slices/message';
+
 export const AddPost = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
   const isAuth = useSelector(selectIsAuth);
@@ -34,7 +37,13 @@ export const AddPost = () => {
       setImageUrl(data.url);
     } catch (error) {
       console.warn(error);
-      alert('Ощибка при загрузке файла');
+
+      dispatch(
+        addMessage({
+          message: 'Ошибка при загрузке файла',
+          state: 'alert',
+        })
+      );
     }
   };
   const onClickRemoveImage = () => {
@@ -63,11 +72,22 @@ export const AddPost = () => {
 
       const _id = isEditing ? id : data._id;
 
+      dispatch(
+        addMessage({
+          message: 'Вы успешно зарегистрировались',
+          state: 'success',
+        })
+      );
       navigate(`/posts/${_id}`);
     } catch (error) {
       console.warn(error);
 
-      alert('Ошибка при создании статьи');
+      dispatch(
+        addMessage({
+          message: 'Ошибка при создании статьи',
+          state: 'alert',
+        })
+      );
     }
   };
 
@@ -84,6 +104,13 @@ export const AddPost = () => {
       }
     } catch (error) {
       console.log(error);
+
+      dispatch(
+        addMessage({
+          message: 'Ошибка при создании статьи',
+          state: 'alert',
+        })
+      );
     }
   }, []);
 

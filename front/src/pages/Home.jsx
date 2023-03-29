@@ -9,7 +9,8 @@ import { CommentsBlock } from '../components/CommentsBlock';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { fetchPosts, fetchTags, fetchPopPosts, fetchComments } from '../redux/slices/post';
+import { fetchPosts, fetchPopPosts } from '../redux/slices/post';
+import styles from './Home.module.scss';
 
 export const Home = (params) => {
   const { tag } = useParams();
@@ -25,15 +26,11 @@ export const Home = (params) => {
   React.useEffect(() => {
     dispatch(fetchPosts(tag));
     dispatch(fetchPopPosts(tag));
-    // dispatch(fetchTags());
-    // dispatch(fetchComments(true));
   }, [tag]);
 
   const handleChange = (event, newValue) => {
     setIsPopPosts(newValue);
   };
-
-  console.log(posts);
 
   return (
     <div key={tag}>
@@ -54,6 +51,7 @@ export const Home = (params) => {
           xs={8}
           item
           hidden={isPopPosts}
+          className={styles.posts}
         >
           {(isPostsLoading ? [...Array(5)] : posts.items).map((obj, index) =>
             isPostsLoading ? (
@@ -84,6 +82,7 @@ export const Home = (params) => {
           xs={8}
           item
           hidden={!isPopPosts}
+          className={styles.posts}
         >
           {(isPostsLoading ? [...Array(5)] : postsPop.items).map((obj, index) =>
             isPostsLoading ? (
@@ -112,6 +111,7 @@ export const Home = (params) => {
         <Grid
           xs={4}
           item
+          className={styles.tags}
         >
           <TagsBlock
             items={tags.items}

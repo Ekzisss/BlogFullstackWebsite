@@ -1,0 +1,10 @@
+@media (max-width: 765px) {
+  .posts {
+    max-width: 100% !important;
+    flex-basis: 100% !important;
+  }
+
+  .tags {
+    display: none !important;
+  }
+}

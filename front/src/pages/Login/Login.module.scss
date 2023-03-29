@@ -14,3 +14,10 @@
   font-weight: bold !important;
   margin-bottom: 30px !important;
 }
+
+@media (max-width: 440px) {
+  .root {
+    padding: 30px !important;
+    width: auto !important;
+  }
+}

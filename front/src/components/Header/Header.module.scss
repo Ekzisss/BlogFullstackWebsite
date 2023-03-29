@@ -35,3 +35,30 @@
     text-decoration: none;
   }
 }
+
+@media (max-width: 395px) {
+  .logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 5px;
+
+    button {
+      margin-left: 0px;
+    }
+
+    a {
+      width: 150px;
+
+      button {
+        width: 100%;
+      }
+    }
+  }
+}

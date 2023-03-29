@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  items: [],
+  messageList: [],
 };
 
 const messageSlice = createSlice({
@@ -9,12 +9,15 @@ const messageSlice = createSlice({
   initialState,
   reducers: {
     addMessage: (state, action) => {
-      // console.dir(state.items);
-      // console.log(action);
-      state.items.push(action.payload);
+      console.log(state.items);
+      console.log(action);
+      state.messageList.push({
+        message: action.payload.message,
+        state: action.payload.state,
+      });
     },
     removeItem: (state) => {
-      state.items.shift();
+      state.messageList.shift();
     },
   },
 });

@@ -31,7 +31,7 @@ function App() {
 
   return (
     <>
-      {/* <MessagePopup /> */}
+      <MessagePopup />
       <Header />
       <Container maxWidth="lg">
         <Routes>

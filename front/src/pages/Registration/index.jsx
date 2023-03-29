@@ -13,6 +13,8 @@ import { fetchRegister } from '../../redux/slices/auth';
 import { useNavigate } from 'react-router-dom';
 import axios from '../../axios';
 
+import { addMessage } from '../../redux/slices/message';
+
 export const Registration = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -38,9 +40,21 @@ export const Registration = () => {
     const data = await dispatch(fetchRegister(values));
 
     if (!data.payload) {
-      return alert('Не удалось зарегестрироватся!');
+      dispatch(
+        addMessage({
+          message: 'Не удалось зарегестрироватся',
+          state: 'alert',
+        })
+      );
+      return;
     }
 
+    dispatch(
+      addMessage({
+        message: 'Вы успешно зарегистрировались',
+        state: 'success',
+      })
+    );
     navigate('/login');
   };
 
@@ -54,7 +68,13 @@ export const Registration = () => {
       setImageUrl(data.url);
     } catch (error) {
       console.warn(error);
-      alert('Ощибка при загрузке файла');
+
+      dispatch(
+        addMessage({
+          message: 'Ошибка при загрузке файла',
+          state: 'alert',
+        })
+      );
     }
   };
 

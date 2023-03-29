@@ -11,6 +11,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchLogin, selectIsAuth } from '../../redux/slices/auth';
 import { Navigate } from 'react-router-dom';
 
+import { addMessage } from '../../redux/slices/message';
+
 export const Login = () => {
   const isAuth = useSelector(selectIsAuth);
   const dispatch = useDispatch();
@@ -32,7 +34,13 @@ export const Login = () => {
     const data = await dispatch(fetchLogin(values));
 
     if (!data.payload) {
-      return alert('Не удалось авторизоватся!');
+      dispatch(
+        addMessage({
+          message: 'Не удалось авторизоватся',
+          state: 'alert',
+        })
+      );
+      return;
     }
 
     if ('token' in data.payload) {

@@ -7,12 +7,10 @@ import Container from '@mui/material/Container';
 import { Link } from 'react-router-dom';
 import { logout, selectIsAuth } from '../../redux/slices/auth';
 import { useDispatch, useSelector } from 'react-redux';
-import { MessagePopup } from '../MessagePopup';
-// import { addMessage, removeItem } from '../../redux/slices/message';
+import { addMessage } from '../../redux/slices/message';
 
 export const Header = () => {
   const dispatch = useDispatch();
-  const [lever, setLever] = useState(false);
 
   const isAuth = useSelector(selectIsAuth);
 
@@ -22,22 +20,9 @@ export const Header = () => {
     }
   };
 
-  const sendMessage = () => {
-    setLever(true);
-  };
-
   return (
     <div className={styles.root}>
-      {/* {lever ? (
-        <MessagePopup
-          message="1111"
-          state="alert"
-        />
-      ) : (
-        ''
-      )} */}
       <Container maxWidth="lg">
-        {/* <button onClick={sendMessage}>ffsfs</button> */}
         <div className={styles.inner}>
           <Link
             className={styles.logo}

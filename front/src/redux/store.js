@@ -8,7 +8,7 @@ const store = configureStore({
   reducer: {
     posts: postsReducer,
     auth: authReducer,
-    // message: messageReducer,
+    message: messageReducer,
   },
 });
 

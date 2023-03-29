@@ -7,9 +7,12 @@ import ReactMarkdown from 'react-markdown';
 
 import { useParams } from 'react-router-dom';
 import axios from '../axios';
-import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+
+import { addMessage } from '../redux/slices/message';
 
 export const FullPost = () => {
+  const dispatch = useDispatch();
   const [data, setData] = React.useState();
   const [comments, setCommnets] = React.useState();
   const [isPostLoading, setPostLoading] = React.useState(true);
@@ -28,7 +31,13 @@ export const FullPost = () => {
       })
       .catch((err) => {
         console.warn(err);
-        alert('Ошибка при получении статьи');
+
+        dispatch(
+          addMessage({
+            message: 'Ошибка при получении статьи',
+            state: 'alert',
+          })
+        );
       });
 
     axios
@@ -39,7 +48,13 @@ export const FullPost = () => {
       })
       .catch((err) => {
         console.warn(err);
-        alert('Ошибка при получении коментариев');
+
+        dispatch(
+          addMessage({
+            message: 'Ошибка при получении коментариев',
+            state: 'alert',
+          })
+        );
       });
   }, [updater]);
 
