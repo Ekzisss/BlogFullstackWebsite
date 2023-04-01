@@ -1,6 +1,6 @@
 # Blog Fullstack Website (Node.js, React) :fire:
 
-[Clcik here to see website](https://blog-frontend-rho-seven.vercel.app/)
+[Clcik here to see website](https://ekzis-blog.vercel.app/)
 
 ### Backend
 
